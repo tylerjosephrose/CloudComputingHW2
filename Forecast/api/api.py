@@ -45,28 +45,46 @@ class HistoricalListApi(generics.ListAPIView):
 class HistoricalLookupApi(generics.ListAPIView):
     """
     Provides the Weather for the given date in YYYYMMDD
-    Date
     """
     queryset = Weather.objects.all()
     serializer_class = HistoricalLookupSerializer
 
     def delete(self, request, date):
-        #date = self.request.META['PATH_INFO'].split('/')[2]
         print(date)
 
         # This check should be covered by the regex url...but just in case
         if not len(date) == 8:
-            return JsonResponse({'error': "Weather at this data was not found"}, status=404)
+            return JsonResponse({'error': "Weather at this date was not found"}, status=404)
 
         try:
             Weather.objects.get(DATE__year=date[:4],
                                 DATE__month=date[4:6],
                                 DATE__day=date[6:8]).delete()
         except Exception as e:
-            return JsonResponse({'error': "Weather at this data was not found"}, status=404)
+            return JsonResponse({'error': "Weather at this date was not found"}, status=404)
         return JsonResponse({'DATE': date}, status=200)
 
+    '''def get(self, request, date):
+        print(date)
 
+        if not len(date) == 8:
+            return JsonResponse({'error': "Weather at the date was not found"})
+
+        try:
+            obj = Weather.objects.get(DATE__year=date[:4],
+                                      DATE__month=date[4:6],
+                                      DATE__day=date[6:8])
+            return JsonResponse({'DATE': date, 'TMAX': obj.TMAX, 'TMIN': obj.TMIN}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': "Weather at this date was not found"}, status=404)'''
+
+    def list(self, request, *args, **kwargs):
+        response = super(HistoricalLookupApi, self).list(request, *args, **kwargs)  # call the original 'list'
+        try:
+            response.data = response.data[0]  # customize the response data
+        except:
+            return JsonResponse({'error': 'Weather at this date was not found'}, status=404)
+        return response  # return response with this custom representation
 
     def get_queryset(self):
         date = self.request.META['PATH_INFO'].split('/')[2]
