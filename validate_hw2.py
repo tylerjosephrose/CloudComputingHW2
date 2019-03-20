@@ -12,6 +12,7 @@ def score_hw2(base_url):
                 print "GL.1 Status code 200 OK"
                 score = 10
             data = json.loads(obj.text)
+
             if len(data) > 1000:
                 print "GL.2 List of DATES OK"
                 score = score + 10
@@ -125,7 +126,7 @@ def score_hw2(base_url):
 
 
         except Exception, e:
-            print "Error:", e
+            print "Bonus Error:", e
         return score
 
     total_score = 0
