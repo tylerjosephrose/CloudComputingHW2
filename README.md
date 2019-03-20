@@ -28,3 +28,6 @@ Please note that the post request requires a post body of `{"DATE": <Date to set
 3. Install all requirements with `python3 -m pip install -r requirements.txt`
 4. Load the fixture which has all the original weather information in it `python3 manage.py loaddata Forecast/fixtures.json`
 5. Start the app `sudo python3 manage.py runserver 0.0.0.0:80`
+
+## How To Use
+Once you have it installed, you can hit your ip locally by going to your local ip and making any http requests as mentioned in the Weather Database API section. To see examples of python code that can hit the api's take a look at validate_hw2.py which can be used to verify that all of the provided apis work. The validate_hw2.py can by run with `python2 validate_hw2.py <address>/api`. If you are running validation from the same machine, the address can just be 127.0.0.1.
