@@ -25,7 +25,6 @@ class HistoricalListApi(generics.ListAPIView):
                 # Make sure the date they sent conforms
                 date_check = int(int(date)/10000000)
                 if 0 < date_check < 10:
-                    # 90.7|68.9|2019-03-27
                     date_input = "{}-{}-{}".format(date[:4], date[4:6], date[6:8])
                     obj, created = Weather.objects.update_or_create(DATE__year=date[:4],
                                                                     DATE__month=date[4:6],
@@ -89,7 +88,6 @@ class ForecastApi(generics.ListAPIView):
     """
     Provides the Forecast for the given next 7 days starting on date in YYYYMMDD
     """
-    queryset = Weather.objects.all()
     serializer_class = ForecastSerializer
 
     def list(self, request, *args, **kwargs):
@@ -107,7 +105,4 @@ class ForecastApi(generics.ListAPIView):
         if not len(date) == 8:
             return
 
-        queryset = Weather.objects.filter(DATE__year=date[:4],
-                                          DATE__month=date[4:6],
-                                          DATE__day=date[6:8])
-        return queryset
+        return [datetime.datetime.strptime(date, "%Y%m%d")]
